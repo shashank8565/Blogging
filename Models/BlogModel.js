@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
 const BlogSchema = new mongoose.Schema({
   title: String,
   description: String,
-  blogbody: String,
-  tags: [String],
+  body: String,
+  comments: [{ type: Schema.Types.ObjectId, ref: "comments" }],
+  author: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
 
 const Blog = mongoose.model("Blog", BlogSchema);

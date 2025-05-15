@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -13,6 +14,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  Blogs: [{ type: Schema.Types.ObjectId, ref: "Blog" }],
 });
 
 const User = mongoose.model("User", userSchema);

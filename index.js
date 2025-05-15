@@ -56,22 +56,56 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/addPost", async (req, res) => {
-  const { title, description, blogBody, tags } = req.body;
+app.post("/create", async (req, res) => {
+  const { title, description, body, userId } = req.body;
+  if (!title && !description && !body && !createdBy) {
+    res.status(204).json("Input error");
+  }
   try {
     const blog = new Blog({
       title,
       description,
-      blogBody,
-      tags, // this must be an array
+      body,
+      author: userId,
     });
+    const savedBlog = await blog.save();
 
-    await blog.save();
+    console.log(savedBlog._id);
 
-    console.log("Document Saved Successfully");
-    res.status(201).json({ Message: "BlogAdded" });
+    const suser = await User.findById(userId);
+    suser.Blogs.push(savedBlog._id);
+    await suser.save();
+    res.status(201).json({ message: "Blog created" });
   } catch (error) {
-    console.log("error", error);
+    console.log(error);
+  }
+});
+
+app.get("/Blogs", async (req, res) => {
+  try {
+    const blogs = await Blog.find({});
+
+    res
+      .status(200)
+      .json({ message: "Blogs fetched successfully", blogs: blogs });
+  } catch (error) {
+    res.send(404).json({ message: "Error in fetching Blogs" });
+    console.log(error);
+  }
+});
+
+app.get("/profile", async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    const user = await User.findById(userId)
+      .select("-password")
+      .populate("Blogs");
+    res
+      .status(200)
+      .json({ message: "Profile Fetched successfully", profile: user });
+  } catch (error) {
+    res.status(404).json({ Message: "Error in fetching" });
   }
 });
 
