@@ -24,9 +24,12 @@ exports.createBlog = async (req, res) => {
 
 exports.getBlogsByTags = async (req, res) => {
   try {
-    const user = await User.findById(req.userId).select("prefferedTags");
-    const blogs = await Blog.find({ tags: { $in: user.prefferedTags } });
-    res.status(200).json({ message: "Blogs fetched", blogs });
+    const user = await User.findById(req.userId).select("preferredTags");
+    const blogs = await Blog.find({
+      tags: { $in: user.preferredTags },
+    }).populate("author", "username");
+
+    res.status(200).json({ blogs });
   } catch (error) {
     res.status(500).json({ message: "Error fetching blogs" });
   }
