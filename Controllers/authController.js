@@ -29,7 +29,7 @@ exports.login = async (req, res) => {
     if (!isValid) throw new Error("Incorrect password");
 
     const token = jwt.sign({ _id: user._id }, "shashank09922", {
-      expiresIn: "10d",
+      expiresIn: "11d",
     });
     res.cookie("token", token);
     res.status(200).json({ message: "Logged in successfully" });
