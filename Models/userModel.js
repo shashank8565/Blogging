@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  preferredTags: [String],
+  prefferedTags: [String],
   Blogs: [{ type: Schema.Types.ObjectId, ref: "Blog" }],
 });
 

@@ -3,14 +3,14 @@ const jwt = require("jsonwebtoken");
 const User = require("../Models/userModel");
 
 exports.signup = async (req, res) => {
-  const { email, username, password, preferredTags } = req.body;
+  const { email, username, password, prefferedTags } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
       username,
       email,
       password: hashedPassword,
-      preferredTags,
+      prefferedTags,
     });
     await user.save();
     res.status(201).json({ message: "User created" });
@@ -21,6 +21,7 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
   const { username, password } = req.body;
+  console.log(req.body);
   try {
     const user = await User.findOne({ username });
     if (!user) throw new Error("Username not found");
